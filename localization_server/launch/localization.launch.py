@@ -9,7 +9,7 @@ def generate_launch_description():
     map_file = os.path.join(get_package_share_directory('map_server'), 'config', 'second_map.yaml')
 
     #RVIZ
-    rviz_config_dir = os.path.join(get_package_share_directory('localization_server'), 'rviz', 'path_foxy.rviz')
+    rviz_config_dir = os.path.join(get_package_share_directory('localization_server'), 'rviz', 'path.rviz')
     rviz_node = Node(
             package='rviz2',
             executable='rviz2',
