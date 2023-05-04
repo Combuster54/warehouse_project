@@ -9,6 +9,8 @@ def generate_launch_description():
     bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'bt.yaml')
     planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'planner_server.yaml')
     recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'recovery.yaml')
+    default_bt_xml_path = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'behavior.xml')
+    remappings = [('/cmd_vel', '/robot/cmd_vel')]
 
     
     return LaunchDescription([     
@@ -17,7 +19,10 @@ def generate_launch_description():
             executable='controller_server',
             name='controller_server',
             output='screen',
-            parameters=[controller_yaml]),
+            parameters=[controller_yaml],
+            remappings = remappings
+            ),
+
 
         Node(
             package='nav2_planner',
@@ -31,6 +36,7 @@ def generate_launch_description():
             executable='recoveries_server',
             name='recoveries_server',
             parameters=[recovery_yaml],
+            remappings = remappings,
             output='screen'),
 
         Node(
@@ -38,7 +44,7 @@ def generate_launch_description():
             executable='bt_navigator',
             name='bt_navigator',
             output='screen',
-            parameters=[bt_navigator_yaml]),
+            parameters=[bt_navigator_yaml, {'default_bt_xml_filename': default_bt_xml_path}]),
 
         Node(
             package='nav2_lifecycle_manager',

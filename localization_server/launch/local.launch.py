@@ -36,7 +36,7 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': True}, 
                         {'yaml_filename': map_file_path}]
-        )
+    )
     nav2_yaml = os.path.join(get_package_share_directory('localization_server'), 'config', 'amcl_config.yaml')
 
     #RVIZ
