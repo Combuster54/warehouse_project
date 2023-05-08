@@ -20,29 +20,27 @@ def generate_launch_description():
     default_bt_xml_path = os.path.join(get_package_share_directory('path_planner_server'), 
     'config', 'navigate_w_replanning_and_recovery.xml')
 
-    filters_yaml = os.path.join(get_package_share_directory(
-        'path_planner_server'), 'config', 'filters.yaml')
-
+    # filters_yaml = os.path.join(get_package_share_directory(
+    #     'path_planner_server'), 'config', 'filters.yaml')
     remappings = [('/cmd_vel', '/robot/cmd_vel')]
 
-    
     return LaunchDescription([     
 
-        Node(
-            package='nav2_map_server',
-            executable='map_server',
-            name='filter_mask_server',
-            output='screen',
-            emulate_tty=True,
-            parameters=[filters_yaml]),
+        # Node(
+        #     package='nav2_map_server',
+        #     executable='map_server',
+        #     name='filter_mask_server',
+        #     output='screen',
+        #     emulate_tty=True,
+        #     parameters=[filters_yaml]),
 
-        Node(
-            package='nav2_map_server',
-            executable='costmap_filter_info_server',
-            name='costmap_filter_info_server',
-            output='screen',
-            emulate_tty=True,
-            parameters=[filters_yaml]),
+        # Node(
+        #     package='nav2_map_server',
+        #     executable='costmap_filter_info_server',
+        #     name='costmap_filter_info_server',
+        #     output='screen',
+        #     emulate_tty=True,
+        #     parameters=[filters_yaml]),
 
         Node(
             package='nav2_controller',
@@ -84,7 +82,9 @@ def generate_launch_description():
                         {'node_names': ['planner_server',
                                         'controller_server',
                                         'recoveries_server',
-                                        'bt_navigator',
-                                        'filter_mask_server',
-                                        'costmap_filter_info_server']}])
+                                        'bt_navigator'
+                                        # ,
+                                        # 'filter_mask_server',
+                                        # 'costmap_filter_info_server'
+                                        ]}])
     ])

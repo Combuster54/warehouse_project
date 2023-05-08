@@ -59,7 +59,6 @@ controller_server:
 
     #lesser values will make robot slow but will make robot stay in path
     #greater values will make robot faster and unstable
-
       BaseObstacle.scale: 0.02
       PathAlign.scale: 30.0
       PathAlign.forward_point_distance: 0.1
@@ -86,12 +85,12 @@ local_costmap:
       robot_radius: 0.25
       # footprint: '[ [0.089, 0.069], [0.089, -0.069], [-0.089, -0.069], [-0.089, 0.069] ]'
       plugins: ["voxel_layer", "inflation_layer"]
-      filters: ["keepout_filter"]
+      # filters: ["keepout_filter"]
       
-      keepout_filter:
-          plugin: "nav2_costmap_2d::KeepoutFilter"
-          enabled: True
-          filter_info_topic: "/costmap_filter_info"
+      # keepout_filter:
+      #     plugin: "nav2_costmap_2d::KeepoutFilter"
+      #     enabled: True
+      #     filter_info_topic: "/costmap_filter_info"
       
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
