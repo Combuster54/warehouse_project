@@ -1,3 +1,5 @@
+import os
+from glob import glob
 from setuptools import setup
 
 package_name = 'nav2_apps'
@@ -10,6 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'scripts'), glob('scripts/*')),
+        (os.path.join('share/' + 'attach_shelf' + '/srv'), glob('srv/GoToLoading.srv'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,

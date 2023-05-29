@@ -1,45 +1,37 @@
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 2.0
-    use_sim_time: True
+    expected_planner_frequency: 3.0
+    use_sim_time: False
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
-      use_astar: false
+      use_astar: true
       allow_unknown: true
 
-planner_server_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
+# planner_server_rclcpp_node:
+#   ros__parameters:
+#     use_sim_time: True
 
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 2.0
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: robot_base_footprint
-      use_sim_time: True
+      use_sim_time: False
       robot_radius: 0.25
       resolution: 0.05
       track_unknown_space: true
+      # plugins: ["static_layer", "obstacle_layer", "keepout_filter","inflation_layer"]
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+
       # filters: ["keepout_filter"]
-      
-      # keepout_filter:
-      #     plugin: "nav2_costmap_2d::KeepoutFilter"
-      #     enabled: True
-      #     filter_info_topic: "/costmap_filter_info"
       
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
-      inflation_layer:
-        plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.25 #robot_dimension / 4
-      always_send_full_costmap: True
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -50,7 +42,16 @@ global_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          raytrace_max_range: 30.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
+          obstacle_max_range: 25.0
+          obstacle_min_range: 0.0     
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.15 #robot_dimension / 4
+      always_send_full_costmap: True 
+      # keepout_filter:
+      #     plugin: "nav2_costmap_2d::KeepoutFilter"
+      #     enabled: True
+      #     filter_info_topic: "/costmap_filter_info"
