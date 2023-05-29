@@ -24,6 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+        'move_shelf_to_ship.py = nav2_apps.move_shelf_to_ship.py:main',
         ],
     },
 )
