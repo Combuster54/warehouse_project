@@ -49,17 +49,6 @@ def generate_launch_description():
             output='screen',
             parameters=[amcl_file]
             ),
-
-        #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', rviz_file],
-        ),
-        
         #~~~~~~~~~~~~~~~~~~lifeclycler_manager~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',
@@ -71,7 +60,7 @@ def generate_launch_description():
                         {'node_names': ['map_server','amcl']}]), 
 
 
-        #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
+                #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         ExecuteProcess(
             cmd=[[

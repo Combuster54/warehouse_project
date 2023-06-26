@@ -1,6 +1,6 @@
 import os
-from glob import glob
 from setuptools import setup
+from glob import glob
 package_name = 'path_planner_server'
 
 setup(
@@ -13,11 +13,12 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
+        (os.path.join('share', package_name, 'rviz'), glob('rviz/*'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='user',
-    maintainer_email='user@todo.todo',
+    maintainer='morg1207',
+    maintainer_email='alaurao@uni.pe',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],

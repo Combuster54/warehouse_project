@@ -4,12 +4,8 @@
   <name>map_server</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="user@todo.todo">user</maintainer>
+  <maintainer email="alaurao@uni.pe">morg1207</maintainer>
   <license>TODO: License declaration</license>
-
-  <depend>rclcpp</depend>
-  <depend>sensor_msgs</depend>
-  <depend>geometry_msgs</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

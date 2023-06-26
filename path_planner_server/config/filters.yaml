@@ -1,21 +1,16 @@
 costmap_filter_info_server:
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: False
     filter_info_topic: "/costmap_filter_info"
     type: 0
-    #debe ser igual al topic_name en Map-Server
     mask_topic: "/keepout_filter_mask"
     base: 0.0
     multiplier: 1.0
-#filter_space_value = base + multiplier * mask_value
+
 filter_mask_server:
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: False
     frame_id: "map"
     topic_name: "/keepout_filter_mask"
-    yaml_filename: "/home/user/ros2_ws/src/map_server/config/second_map_filter_mask.yaml"
-
-  # type
-  #   0 for Keepout Zones/preferred lanes filter
-  #   1 for speed filter (if the speed limit is specified in % of maximum speed)
-  #   2 for speed filter (if the speed limit is specified in absolute value (m/s))
+    #yaml_filename: "/home/user/ros2_ws/src/warehouse_project/map_server/maps/map_keepout.yaml"
+    yaml_filename: "/home/user/ros2_ws/src/warehouse_project/map_server/maps/map_keepout_real.yaml"
