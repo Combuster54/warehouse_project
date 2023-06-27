@@ -14,7 +14,9 @@ def generate_launch_description():
     filters_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'filters.yaml')
     remappings = [('/cmd_vel', '/robot/cmd_vel')]
     
-    return LaunchDescription([     
+    return LaunchDescription([    
+
+        #~~~~~~~~~~~~~~~~~~controller server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_controller',
             executable='controller_server',
@@ -23,28 +25,28 @@ def generate_launch_description():
             parameters=[controller_yaml],
             remappings = remappings),
     
-
+        #~~~~~~~~~~~~~~~~~~planner server~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_planner',
             executable='planner_server',
             name='planner_server',
             output='screen',
             parameters=[planner_yaml]),
-            
+        #~~~~~~~~~~~~~~~~~~recoveries server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_recoveries',
             executable='recoveries_server',
             name='recoveries_server',
             parameters=[recovery_yaml],
             output='screen'),
-
+        #~~~~~~~~~~~~~~~~~~~~~bt navigator~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_bt_navigator',
             executable='bt_navigator',
             name='bt_navigator',
             output='screen',
             parameters=[bt_navigator_yaml]),
-
+        #~~~~~~~~~~~~~~~~~~~~~~~map server~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_map_server',
             executable='map_server',
@@ -52,7 +54,7 @@ def generate_launch_description():
             output='screen',
             emulate_tty=True,
             parameters=[filters_yaml]),
-
+        #~~~~~~~~~~~~~~~~~~~~~costmap filter~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_map_server',
             executable='costmap_filter_info_server',
@@ -60,6 +62,7 @@ def generate_launch_description():
             output='screen',
             emulate_tty=True,
             parameters=[filters_yaml]),
+        #~~~~~~~~~~~~~~~~~~~~lifecycle manager~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -73,14 +76,14 @@ def generate_launch_description():
                                         'filter_mask_server',
                                         'costmap_filter_info_server',]}]),
 
-        #~~~~~~~~~~~~~~~~~~servidor de aproximación~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='attach_shelf',
             executable='approach_service_server_node',
             name='attach_shelf',
             output='screen',
         ),
-        #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~      
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      
         Node(
             package='rviz2',
             executable='rviz2',

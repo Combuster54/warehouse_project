@@ -6,6 +6,7 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import LaunchConfiguration, PythonExpression, FindExecutable
 
 def generate_launch_description():
+
     package_name = 'localization_server'
 
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
@@ -25,10 +26,8 @@ def generate_launch_description():
 
     map_file_path = PythonExpression(["'",package_path, "/config","/",map_file, "'"])
 
-
-
-
     return LaunchDescription([
+
         arg_map_file,
 
         #~~~~~~~~~~~~~~~~~~provide map~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,6 +41,7 @@ def generate_launch_description():
                        ]),
 
         #~~~~~~~~~~~~~~~~~~amcl~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         Node(
             package='nav2_amcl',
             executable='amcl',
@@ -70,7 +70,6 @@ def generate_launch_description():
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]), 
 
-
         #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         ExecuteProcess(
@@ -83,5 +82,4 @@ def generate_launch_description():
             shell=True
             )
         
-
         ]) 
