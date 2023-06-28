@@ -4,75 +4,65 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():
-
-    controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 
-    'config', 'controller.yaml')
-
-    bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 
-    'config', 'bt.yaml')
-
-    planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 
-    'config', 'planner_server.yaml')
-
-    recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 
-    'config', 'recovery.yaml')
-
-    default_bt_xml_path = os.path.join(get_package_share_directory('path_planner_server'), 
-    'config', 'navigate_w_replanning_and_recovery.xml')
-
-    # filters_yaml = os.path.join(get_package_share_directory(
-    #     'path_planner_server'), 'config', 'filters.yaml')
+    package_name = 'path_planner_server'
+    rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
+    #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+    controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'controller.yaml')
+    bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'bt.yaml')
+    planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'planner_server.yaml')
+    recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'recovery.yaml')
+    filters_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'filters.yaml')
     remappings = [('/cmd_vel', '/robot/cmd_vel')]
+    
+    return LaunchDescription([    
 
-    return LaunchDescription([     
-
-        # Node(
-        #     package='nav2_map_server',
-        #     executable='map_server',
-        #     name='filter_mask_server',
-        #     output='screen',
-        #     emulate_tty=True,
-        #     parameters=[filters_yaml]),
-
-        # Node(
-        #     package='nav2_map_server',
-        #     executable='costmap_filter_info_server',
-        #     name='costmap_filter_info_server',
-        #     output='screen',
-        #     emulate_tty=True,
-        #     parameters=[filters_yaml]),
-
+        #~~~~~~~~~~~~~~~~~~controller server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_controller',
             executable='controller_server',
             name='controller_server',
             output='screen',
             parameters=[controller_yaml],
-            remappings = remappings
-            ),
-
+            remappings = remappings),
+    
+        #~~~~~~~~~~~~~~~~~~planner server~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_planner',
             executable='planner_server',
             name='planner_server',
             output='screen',
             parameters=[planner_yaml]),
-  
+        #~~~~~~~~~~~~~~~~~~recoveries server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_recoveries',
             executable='recoveries_server',
             name='recoveries_server',
             parameters=[recovery_yaml],
-            remappings = remappings,
             output='screen'),
-
+        #~~~~~~~~~~~~~~~~~~~~~bt navigator~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_bt_navigator',
             executable='bt_navigator',
             name='bt_navigator',
             output='screen',
-            parameters=[bt_navigator_yaml, {'default_bt_xml_filename': default_bt_xml_path}]),
-
+            parameters=[bt_navigator_yaml]),
+        #~~~~~~~~~~~~~~~~~~~~~~~map server~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='filter_mask_server',
+            output='screen',
+            emulate_tty=True,
+            parameters=[filters_yaml]),
+        #~~~~~~~~~~~~~~~~~~~~~costmap filter~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Node(
+            package='nav2_map_server',
+            executable='costmap_filter_info_server',
+            name='costmap_filter_info_server',
+            output='screen',
+            emulate_tty=True,
+            parameters=[filters_yaml]),
+        #~~~~~~~~~~~~~~~~~~~~lifecycle manager~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -82,9 +72,23 @@ def generate_launch_description():
                         {'node_names': ['planner_server',
                                         'controller_server',
                                         'recoveries_server',
-                                        'bt_navigator'
-                                        # ,
-                                        # 'filter_mask_server',
-                                        # 'costmap_filter_info_server'
-                                        ]}])
+                                        'bt_navigator',
+                                        'filter_mask_server',
+                                        'costmap_filter_info_server',]}]),
+
+        #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~
+        Node(
+            package='attach_shelf',
+            executable='approach_service_server_node',
+            name='attach_shelf',
+            output='screen',
+        ),
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            output='screen',
+            arguments=['-d', rviz_file],
+        ),
     ])

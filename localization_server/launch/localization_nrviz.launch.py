@@ -6,7 +6,6 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import LaunchConfiguration, PythonExpression, FindExecutable
 
 def generate_launch_description():
-
     package_name = 'localization_server'
 
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
@@ -26,8 +25,10 @@ def generate_launch_description():
 
     map_file_path = PythonExpression(["'",package_path, "/config","/",map_file, "'"])
 
-    return LaunchDescription([
 
+
+
+    return LaunchDescription([
         arg_map_file,
 
         #~~~~~~~~~~~~~~~~~~provide map~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,7 +42,6 @@ def generate_launch_description():
                        ]),
 
         #~~~~~~~~~~~~~~~~~~amcl~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         Node(
             package='nav2_amcl',
             executable='amcl',
@@ -49,17 +49,6 @@ def generate_launch_description():
             output='screen',
             parameters=[amcl_file]
             ),
-
-        #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', rviz_file],
-        ),
-        
         #~~~~~~~~~~~~~~~~~~lifeclycler_manager~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',
@@ -70,7 +59,8 @@ def generate_launch_description():
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]), 
 
-        #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         ExecuteProcess(
             cmd=[[
@@ -82,4 +72,5 @@ def generate_launch_description():
             shell=True
             )
         
+
         ]) 
