@@ -1,5 +1,4 @@
 #! /usr/bin/env python3
-# Copyright 2021 Samsung Research America
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,14 +38,6 @@ shipping_destinations = {
     #"shipping_position": [0.232 , -3.3,0.0, 1.0]
     "shipping_position": [0.22 , -2.7,0.0, 1.0]
     }
-
-'''
-Basic item picking demo. In this demonstration, the expectation
-is that a person is waiting at the item shelf to put the item on the robot
-and at the pallet jack to remove it
-(probably with a button for 'got item, robot go do next task').
-'''
-
 
 
 rclpy.init()
