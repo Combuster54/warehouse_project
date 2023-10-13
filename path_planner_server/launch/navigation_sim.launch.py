@@ -5,6 +5,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     package_name = 'path_planner_server'
+    localization_package = 'localization_server'
+    map_package = "map_server"
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
     #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
     controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'controller.yaml')
@@ -12,9 +14,33 @@ def generate_launch_description():
     planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'planner_server.yaml')
     recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'recovery.yaml')
     filters_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'filters.yaml')
+    amcl_file = os.path.join(get_package_share_directory(localization_package),'config','amcl_config.yaml')
+    map_file_path = os.path.join(get_package_share_directory(map_package),'config','warehouse_map_sim.yaml')
+
     remappings = [('/cmd_vel', '/robot/cmd_vel')]
-    
+
     return LaunchDescription([    
+
+        #~~~~~~~~~~~~~~~~~~provide map~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='map_server',
+            output='screen',
+            parameters=[{'use_sim_time': False}, 
+                        {'yaml_filename':map_file_path} 
+                       ]),
+
+        #~~~~~~~~~~~~~~~~~~amcl~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        Node(
+            package='nav2_amcl',
+            executable='amcl',
+            name='amcl',
+            output='screen',
+            parameters=[amcl_file]
+
+            ),
 
         #~~~~~~~~~~~~~~~~~~controller server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
@@ -76,7 +102,9 @@ def generate_launch_description():
                                         'recoveries_server',
                                         'bt_navigator',
                                         'filter_mask_server',
-                                        'costmap_filter_info_server',]}]),
+                                        'costmap_filter_info_server',
+                                        'map_server',
+                                        'amcl']}]),
 
         #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(

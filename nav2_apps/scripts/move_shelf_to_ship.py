@@ -1,16 +1,4 @@
 #! /usr/bin/env python3
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 import time
 from copy import deepcopy
@@ -19,25 +7,33 @@ from geometry_msgs.msg import PoseStamped
 from rclpy.duration import Duration
 import rclpy
 from rclpy.node import Node
-from nav2_simple_commander.robot_navigator import BasicNavigator, NavigationResult
+from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 from attach_shelf.srv import GoToLoading
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 from geometry_msgs.msg import Polygon,Point32, Twist
 from std_msgs.msg import Empty
 from math import cos, sin, pi
 # Shelf positions for picking
+
 shelf_positions = {
     #"loading_position": [5.845, -0.3,-0.7071067,0.7073883 ],
     #"init_position" : [0.0, 0.0, 0.0, 1.0]
-    "loading_position": [4.33, -0.549,-0.7071067,0.7073883 ],
-    "init_position" : [-0.1129, 0.2988, 0.0, 1.0]
+    "init_position" :   [0.031, -0.023, -0.000,
+                        -0.000, -0.000, -0.000, 1.000],
+    "loading_position": [5.600, -0.272, 0.000,
+                        -0.000, -0.000, -0.679, 0.734],
+
+    "shipping_position":[0.281, -3.0, 0.000,
+                        0.000, 0.000, -0.689, 0.725]
+
     }
 
 # Shipping destination for picked products
 shipping_destinations = {
-    #"shipping_position": [0.232 , -3.3,0.0, 1.0]
-    "shipping_position": [0.22 , -2.7,0.0, 1.0]
+    "shipping_position":[0.281, -3.0, 0.000,
+                        0.000, 0.000, -0.689, 0.725]
     }
+
 
 
 rclpy.init()
@@ -68,7 +64,7 @@ request_init_position = 'init_position'
 
 def publish_footprint_shelf():
 
-        
+    #Add publisher footprint_ 2.5-5hz or 1hz
     # publish footprint
     footprint = Polygon()
     point1 = Point32()
@@ -118,11 +114,14 @@ def go_to_point2():
     shipping_destination.header.stamp = navigator.get_clock().now().to_msg()
     shipping_destination.pose.position.x = shipping_destinations[request_destination][0]
     shipping_destination.pose.position.y = shipping_destinations[request_destination][1]
-    shipping_destination.pose.orientation.z = 0.0
-    shipping_destination.pose.orientation.w = 1.0
+    shipping_destination.pose.position.z = shipping_destinations[request_destination][2]
+    shipping_destination.pose.orientation.x = shipping_destinations[request_destination][3]
+    shipping_destination.pose.orientation.y = shipping_destinations[request_destination][4]
+    shipping_destination.pose.orientation.z = shipping_destinations[request_destination][5]
+    shipping_destination.pose.orientation.w = shipping_destinations[request_destination][6]
     navigator.goToPose(shipping_destination)
     i = 0
-    while not navigator.isNavComplete():
+    while not navigator.isTaskComplete():
         i = i + 1
         feedback = navigator.getFeedback()
         if feedback and i % 5 == 0:
@@ -168,7 +167,7 @@ def exit_with_shelf():
     msg_vel = Twist()
     msg_vel.linear.x = -0.1
     #duration = Duration(seconds=12)
-    duration = Duration(seconds=14)
+    duration = Duration(seconds=26)
     rate = navigator.create_rate(10, navigator.get_clock())
     start_time = navigator.get_clock().now()
     while rclpy.ok() and (navigator.get_clock().now() - start_time) < duration:
@@ -190,12 +189,12 @@ def exit_with_shelf():
     start_time = navigator.get_clock().now()
     while rclpy.ok() and (navigator.get_clock().now() - start_time) < duration:
         msg = Twist()
-        msg.linear.x = 0.0
+        msg.linear.x = 0.05
         msg.linear.y = 0.0
         msg.linear.z = 0.0
         msg.angular.x = 0.0
         msg.angular.y = 0.0
-        msg.angular.z = -0.45
+        msg.angular.z = -0.30
         pub_cmd_vel.publish(msg)
         print('turn with shelf')
         rate.sleep
@@ -203,16 +202,16 @@ def exit_with_shelf():
     msg.linear.x = 0.1
     pub_cmd_vel.publish(msg)
     #forward
-    duration = Duration(seconds=5)
+    duration = Duration(seconds=3)
     start_time = navigator.get_clock().now()
     while rclpy.ok() and (navigator.get_clock().now() - start_time) < duration:
         msg = Twist()
-        msg.linear.x = 0.1
+        msg.linear.x = 0.05
         msg.linear.y = 0.0
         msg.linear.z = 0.0
         msg.angular.x = 0.0
         msg.angular.y = 0.0
-        msg.angular.z = 0.0
+        msg.angular.z = -0.30
         pub_cmd_vel.publish(msg)
         print('moving backward with shelf')
         rate.sleep
@@ -228,8 +227,11 @@ def set_pos_init():
     initial_pose.header.stamp = navigator.get_clock().now().to_msg()
     initial_pose.pose.position.x = shelf_positions[request_init_position][0]
     initial_pose.pose.position.y = shelf_positions[request_init_position][1]
-    initial_pose.pose.orientation.z = 0.0
-    initial_pose.pose.orientation.w = 1.0
+    initial_pose.pose.position.z = shelf_positions[request_init_position][2]
+    initial_pose.pose.orientation.x = shelf_positions[request_init_position][3]
+    initial_pose.pose.orientation.y = shelf_positions[request_init_position][4]
+    initial_pose.pose.orientation.z = shelf_positions[request_init_position][5]
+    initial_pose.pose.orientation.w = shelf_positions[request_init_position][6]
 
     navigator.setInitialPose(initial_pose)
 
@@ -259,8 +261,11 @@ def go_pose(go_pose_dic, key_dic, state_num):
     shelf_item_pose.header.stamp = navigator.get_clock().now().to_msg()
     shelf_item_pose.pose.position.x = go_pose_dic[key_dic][0]
     shelf_item_pose.pose.position.y = go_pose_dic[key_dic][1]
-    shelf_item_pose.pose.orientation.z = go_pose_dic[key_dic][2]
-    shelf_item_pose.pose.orientation.w = go_pose_dic[key_dic][3]
+    shelf_item_pose.pose.position.z = go_pose_dic[key_dic][2]
+    shelf_item_pose.pose.orientation.x = go_pose_dic[key_dic][3]
+    shelf_item_pose.pose.orientation.y = go_pose_dic[key_dic][4]
+    shelf_item_pose.pose.orientation.z = go_pose_dic[key_dic][5]
+    shelf_item_pose.pose.orientation.w = go_pose_dic[key_dic][6]
     print('Received request for item picking at ' + request_item_location + '.')
     navigator.goToPose(shelf_item_pose)
 
@@ -268,7 +273,7 @@ def go_pose(go_pose_dic, key_dic, state_num):
     # (e.x. queue up future tasks or detect person for fine-tuned positioning)
     # Print information for workers on the robot's ETA for the demonstration
     i = 0
-    while not navigator.isNavComplete():
+    while not navigator.isTaskComplete():
         i = i + 1
         feedback = navigator.getFeedback()
         if feedback and i % 5 == 0:
@@ -278,22 +283,23 @@ def go_pose(go_pose_dic, key_dic, state_num):
                   + ' seconds.')
     
     result = navigator.getResult()
-    if result == NavigationResult.SUCCEEDED:
+    if result == TaskResult.SUCCEEDED:
         state_nav = state_num
         print('! Bringing product to shipping destination (' + key_dic + ')...')
 
 
-    elif result == NavigationResult.CANCELED:
+    elif result == TaskResult.CANCELED:
         print('Task at ' + key_dic  +
               ' was canceled. Returning to staging point...')
         exit(-1)
 
-    elif result == NavigationResult.FAILED:
+    elif result == TaskResult.FAILED:
         print('Task at ' + key_dic + ' failed!')
         exit(-1)
 
-    while not navigator.isNavComplete():
+    while not navigator.isTaskComplete():
         pass
+
 def main():
     global state_nav
     print(state_nav)
@@ -303,6 +309,7 @@ def main():
             print(state_nav)
             set_pos_init()
             go_pose(shelf_positions,request_item_location,2)
+            print(state_nav)
         if state_nav==2:
             print(state_nav)
             call_service()

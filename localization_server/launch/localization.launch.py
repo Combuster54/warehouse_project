@@ -18,14 +18,14 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_map_real.yaml',
+        default_value='warehouse_map_sim.yaml',
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa
+
     package_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     map_file_path = PythonExpression(["'",package_path, "/config","/",map_file, "'"])
-
     return LaunchDescription([
 
         arg_map_file,
@@ -48,6 +48,7 @@ def generate_launch_description():
             name='amcl',
             output='screen',
             parameters=[amcl_file]
+
             ),
 
         #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,5 +82,4 @@ def generate_launch_description():
             ]],
             shell=True
             )
-        
         ]) 

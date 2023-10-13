@@ -13,7 +13,7 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_map_real.yaml',
+        default_value='warehouse_map_sim.yaml',
         description='Path to the map select'
     )
     print('Init3')
@@ -21,7 +21,7 @@ def generate_launch_description():
     package_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     map_file_path = PythonExpression(["'",package_path, "/config","/", map_file, "'"])
-
+    
     return LaunchDescription([
         arg_map_file,
 
@@ -34,9 +34,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}, 
                         {'yaml_filename':map_file_path} 
                        ]),
-
         #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
         Node(
             package='rviz2',
             executable='rviz2',
@@ -44,7 +42,6 @@ def generate_launch_description():
             output='screen',
             arguments=['-d', rviz_file],
         ),
-        
         #~~~~~~~~~~~~~~~~~~lifeclycler_manager~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',

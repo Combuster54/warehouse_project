@@ -17,16 +17,13 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_map_real.yaml',
+        default_value='warehouse_map_sim.yaml',
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa
     package_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     map_file_path = PythonExpression(["'",package_path, "/config","/",map_file, "'"])
-
-
-
 
     return LaunchDescription([
         arg_map_file,
@@ -37,7 +34,7 @@ def generate_launch_description():
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': False}, 
+            parameters=[{'use_sim_time': True}, 
                         {'yaml_filename':map_file_path} 
                        ]),
 
@@ -55,7 +52,7 @@ def generate_launch_description():
             executable='lifecycle_manager',
             name='lifecycle_manager_mapper',
             output='screen',
-            parameters=[{'use_sim_time': False},
+            parameters=[{'use_sim_time': True},
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]), 
 
