@@ -1,6 +1,6 @@
 amcl:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: True
     # Modela el error en la rotación de la odometría resultante de la rotación del robot. Es decir, si el robot gira,
     # ¿cuánto de ese giro se registra erróneamente como un giro adicional?
     alpha1: 0.1
@@ -48,11 +48,11 @@ amcl:
     #modelo de laser a usar /likelihood_field /likelihood_field_prob
     laser_model_type: "likelihood_field"
     #Cuántos haces espaciados uniformemente en cada exploración se utilizarán al actualizar el filtro.
-    max_beams: 50
+    max_beams: 540
     #Cantidad de particulas del filtro de particulas max
-    max_particles: 4000
+    max_particles: 2500
     #Cantidad de particulas del filtro de particulas min
-    min_particles: 100
+    min_particles: 250
     # Porcentaje del error en cada resampling del filtro de partículas
     pf_err: 0.05
     #

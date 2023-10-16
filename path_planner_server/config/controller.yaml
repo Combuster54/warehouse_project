@@ -50,6 +50,7 @@ controller_server:
       #------------Velocidades--------------
       min_vel_x: -0.1
       max_vel_x: 0.1
+
       min_vel_y: 0.0
       max_vel_y: 0.0
 
@@ -98,8 +99,6 @@ controller_server:
       stateful: True
       #----------------------Críticos----------------------------
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      #critics: ["PathAlign","Oscillation", "BaseObstacle", "GoalAlign", "PathDist", "GoalDist"]
-      #critics: ["RotateToGoal", "Oscillation", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
       BaseObstacle.scale: 0.02
       PathAlign.scale: 32.0
       PathAlign.forward_point_distance: 0.1
