@@ -6,6 +6,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     package_name = 'path_planner_server'
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
+
     #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
     controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'controller.yaml')
     bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'bt.yaml')
@@ -79,18 +80,19 @@ def generate_launch_description():
                                         'costmap_filter_info_server',]}]),
 
         #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~
-        Node(
-            package='attach_shelf',
-            executable='approach_service_server_node',
-            name='attach_shelf',
-            output='screen',
-        ),
+        # Node(
+        #     package='attach_shelf',
+        #     executable='approach_service_server_node',
+        #     name='attach_shelf',
+        #     output='screen',
+        # )
+        # ,
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', rviz_file],
-        ),
+        # Node(
+        #     package='rviz2',
+        #     executable='rviz2',
+        #     name='rviz2',
+        #     output='screen',
+        #     arguments=['-d', rviz_file],
+        # ),
     ])

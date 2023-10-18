@@ -155,33 +155,33 @@ local_costmap:
         cost_scaling_factor: 3.0
         inflation_radius: 0.3
       #~~~~~~~~~~~~~~~~~~~Obstacle layer config~~~~~~~~~~~~~~~~~~~+
-      obstacle_layer:
-        plugin: "nav2_costmap_2d::ObstacleLayer"
-        #habilitar capa de obstáculos
-        enabled: True
-        #Despeje las celdas ocupadas bajo la huella del robot.
-        footprint_clearing_enabled: True
-        #fuente de observación
-        observation_sources: scan
-        scan:
-          topic: /scan
-          # Parámetro para cámaras 3d
-          max_obstacle_height: 2.0
-          # Si la fuente debe marcarse en el mapa de costes.
-          # Si la fuente debe raytrace claro en costmap.
-          clearing: True
-          marking: True
-          # Tipo de dato
-          data_type: "LaserScan"
-          # Alcance máximo del trazado de rayos para eliminar obstáculos del mapa de costes.
-          raytrace_max_range: 5.0
-          # Alcance mínimo del trazado de rayos para eliminar obstáculos del mapa de costes.
-          raytrace_min_range: 0.3
-          # Alcance máximo para marcar obstáculos en el mapa de costes.
-          obstacle_max_range: 5.0
-          # Alcance mínimo para marcar obstáculos en el mapa de costes
-          obstacle_min_range: 0.5
-          
+      # obstacle_layer:
+      #   plugin: "nav2_costmap_2d::ObstacleLayer"
+      #   #habilitar capa de obstáculos
+      #   enabled: True
+      #   #Despeje las celdas ocupadas bajo la huella del robot.
+      #   footprint_clearing_enabled: True
+      #   #fuente de observación
+      #   observation_sources: scan
+      #   scan:
+      #     topic: /scan
+      #     # Parámetro para cámaras 3d
+      #     max_obstacle_height: 2.0
+      #     # Si la fuente debe marcarse en el mapa de costes.
+      #     # Si la fuente debe raytrace claro en costmap.
+      #     clearing: True
+      #     marking: True
+      #     # Tipo de dato
+      #     data_type: "LaserScan"
+      #     # Alcance máximo del trazado de rayos para eliminar obstáculos del mapa de costes.
+      #     raytrace_max_range: 5.0
+      #     # Alcance mínimo del trazado de rayos para eliminar obstáculos del mapa de costes.
+      #     raytrace_min_range: 0.3
+      #     # Alcance máximo para marcar obstáculos en el mapa de costes.
+      #     obstacle_max_range: 5.0
+      #     # Alcance mínimo para marcar obstáculos en el mapa de costes
+      #     obstacle_min_range: 0.5
+
       keepout_filter:
         plugin: "nav2_costmap_2d::KeepoutFilter"
         enabled: True
