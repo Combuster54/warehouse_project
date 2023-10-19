@@ -40,7 +40,7 @@ options = {
   -- ~~~~~~~~~~~~~~~~~~~~~~~Transfor ~~~~~~~~~~~~~~~~~~~~~~~~~~
   lookup_transform_timeout_sec = 0.2,
   -- frecuencia de publicación de los subs mapas por el local SLAM
-  submap_publish_period_sec = 0.3,
+  submap_publish_period_sec = 0.5,
   -- Frecuencia de la publicación de la posición del robot 200 hz
   pose_publish_period_sec = 5e-3,
   -- Frecuencia de la publicación de la trayectoria del robot
