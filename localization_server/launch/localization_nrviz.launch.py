@@ -8,6 +8,7 @@ from launch.substitutions import LaunchConfiguration, PythonExpression, FindExec
 def generate_launch_description():
     package_name = 'localization_server'
 
+    use_sim_time = True
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')
@@ -17,7 +18,7 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_map_sim.yaml',
+        default_value='warehouse_sim_res001.yaml',
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa
@@ -34,7 +35,7 @@ def generate_launch_description():
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': True}, 
+            parameters=[{'use_sim_time': use_sim_time}, 
                         {'yaml_filename':map_file_path} 
                        ]),
 
@@ -52,7 +53,7 @@ def generate_launch_description():
             executable='lifecycle_manager',
             name='lifecycle_manager_mapper',
             output='screen',
-            parameters=[{'use_sim_time': True},
+            parameters=[{'use_sim_time': use_sim_time},
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]), 
 
