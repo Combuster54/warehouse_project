@@ -1,0 +1,12 @@
+header:
+  stamp:
+    sec: 1698120304
+    nanosec: 305296533
+  frame_id: robot_front_laser_link
+angle_min: -2.356194496154785
+angle_max: 2.356194496154785
+angle_increment: 0.004363323096185923
+time_increment: 1.736111516947858e-05
+scan_time: 0.02500000037252903
+range_min: 0.019999999552965164
+range_max: 30.0

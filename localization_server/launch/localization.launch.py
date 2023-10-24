@@ -14,12 +14,13 @@ def generate_launch_description():
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')
 
     sim_map = 'warehouse_sim_res001.yaml'
+    real_map = 'rea11.yaml'
     #~~~~~~~~~~~~~~~~~~Declare parameters~~~~~~~~~~~~~~~
     # Declara el argumento para el archivo de configuración YAML
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value= sim_map,
+        default_value= real_map,
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa
