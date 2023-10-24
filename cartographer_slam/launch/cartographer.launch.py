@@ -10,7 +10,7 @@ def generate_launch_description():
     configuration_basename = 'cartographer.lua'
     rviz_file = os.path.join(get_package_share_directory(package_name ),'rviz','rviz_config.rviz')
 
-    use_sim_time = True
+    use_sim_time = False
 
     return LaunchDescription([
 

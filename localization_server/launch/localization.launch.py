@@ -8,7 +8,7 @@ from launch.substitutions import LaunchConfiguration, PythonExpression, FindExec
 def generate_launch_description():
 
     package_name = 'localization_server'
-    use_sim_time = True
+    use_sim_time = False
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')

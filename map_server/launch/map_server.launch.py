@@ -5,6 +5,9 @@ from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, PythonExpression
 
+
+use_sim_time = False
+
 def generate_launch_description():
     package_name = 'map_server'
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
@@ -13,7 +16,7 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_map_sim.yaml',
+        default_value='warehouse_map_real.yaml',
         description='Path to the map select'
     )
     print('Init3')
@@ -31,7 +34,7 @@ def generate_launch_description():
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': False}, 
+            parameters=[{'use_sim_time': use_sim_time}, 
                         {'yaml_filename':map_file_path} 
                        ]),
         #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +51,7 @@ def generate_launch_description():
             executable='lifecycle_manager',
             name='lifecycle_manager_mapper',
             output='screen',
-            parameters=[{'use_sim_time': False},
+            parameters=[{'use_sim_time': use_sim_time},
                         {'autostart': True},
                         {'node_names': ['map_server']}])            
         ])
