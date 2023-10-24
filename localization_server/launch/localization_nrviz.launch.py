@@ -6,27 +6,28 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import LaunchConfiguration, PythonExpression, FindExecutable
 
 def generate_launch_description():
-    package_name = 'localization_server'
 
+    package_name = 'localization_server'
     use_sim_time = False
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
-    rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')
 
+    real_map = 'warehouse_map_real.yaml'
     #~~~~~~~~~~~~~~~~~~Declare parameters~~~~~~~~~~~~~~~
     # Declara el argumento para el archivo de configuración YAML
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_sim_res001.yaml',
+        default_value= real_map,
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa
+
     package_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     map_file_path = PythonExpression(["'",package_path, "/config","/",map_file, "'"])
-
     return LaunchDescription([
+
         arg_map_file,
 
         #~~~~~~~~~~~~~~~~~~provide map~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,6 +41,7 @@ def generate_launch_description():
                        ]),
 
         #~~~~~~~~~~~~~~~~~~amcl~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         Node(
             package='nav2_amcl',
             executable='amcl',
@@ -57,18 +59,15 @@ def generate_launch_description():
                         {'autostart': True},
                         {'node_names': ['map_server','amcl']}]), 
 
-
-                #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-        ExecuteProcess(
-            cmd=[[
-                FindExecutable(name='ros2'),
-                " service call ",
-                "/reinitialize_global_localization ",
-                "std_srvs/srv/Empty",
-            ]],
-            shell=True
-            )
-        
-
+        # ExecuteProcess(
+        #     cmd=[[
+        #         FindExecutable(name='ros2'),
+        #         " service call ",
+        #         "/reinitialize_global_localization ",
+        #         "std_srvs/srv/Empty",
+        #     ]],
+        #     shell=True
+        #     )
         ]) 

@@ -17,7 +17,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Combuster54',
+    maintainer='combuster',
     maintainer_email='rubenovidalo@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',

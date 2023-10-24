@@ -35,7 +35,7 @@ global_costmap:
       transform_tolerance: 0.5
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
 
-      filters: ["keepout_filter"]
+      #filters: ["keepout_filter"]
       #~~~~~~~~~~~~~~~~~~Static layer~~~~~~~~~~~~~~~~~~~+
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
@@ -74,9 +74,9 @@ global_costmap:
         cost_scaling_factor: 5.0
         inflation_radius: 0.5
       #~~~~~~~~~~~~~~~~~~~Keepout Filter~~~~~~~~~~~~~~~~~~~+
-      keepout_filter:
-        plugin: "nav2_costmap_2d::KeepoutFilter"
-        enabled: True
-        filter_info_topic: "/costmap_filter_info"
+      # keepout_filter:
+      #   plugin: "nav2_costmap_2d::KeepoutFilter"
+      #   enabled: True
+      #   filter_info_topic: "/costmap_filter_info"
       # Si se envía el mapa de costes completo en cada actualización, en lugar de las actualizaciones.
       always_send_full_costmap: True     

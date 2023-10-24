@@ -4,7 +4,7 @@
   <name>nav2_apps</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="alaurao@uni.pe">morg1207</maintainer>
+  <maintainer email="rubenovidalo@gmail.com">combuster</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rlcpy</depend>
