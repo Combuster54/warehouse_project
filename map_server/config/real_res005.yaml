@@ -1,4 +1,4 @@
-image: real_res003.pgm
+image: real_res005.pgm
 mode: trinary
 resolution: 0.03
 origin: [-1.2, -3.95, 0]
