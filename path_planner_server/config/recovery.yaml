@@ -6,7 +6,7 @@ recoveries_server:
     # Tema para el footprint a en el marco local del mapa de costes.
     footprint_topic: local_costmap/published_footprint
     # Frecuencia para ejecutar plugins de comportamiento.
-    cycle_frequency: 5.0
+    cycle_frequency: 4.0
     # Plugins de recuperación
     recovery_plugins: ["backup","spin","wait"]
     backup:

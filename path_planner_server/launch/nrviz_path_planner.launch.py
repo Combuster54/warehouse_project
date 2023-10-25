@@ -5,14 +5,13 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     package_name = 'path_planner_server'
-    rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
 
     #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
-    controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'controller.yaml')
-    bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'bt.yaml')
-    planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'planner_server.yaml')
-    recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'recovery.yaml')
-    filters_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'filters.yaml')
+    controller_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'controller.yaml')
+    bt_navigator_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'bt.yaml')
+    planner_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'planner_server.yaml')
+    recovery_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'recovery.yaml')
+    filters_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'filters.yaml')
     remappings = [('/cmd_vel', '/robot/cmd_vel')]
     
     return LaunchDescription([    
