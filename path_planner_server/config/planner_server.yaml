@@ -32,7 +32,7 @@ global_costmap:
 
       resolution: 0.01
       track_unknown_space: true
-      transform_tolerance: 0.5
+      transform_tolerance: 0.4
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
 
       #filters: ["keepout_filter"]
@@ -40,7 +40,7 @@ global_costmap:
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
-        transform_tolerance: 0.5
+        transform_tolerance: 0.4
       #~~~~~~~~~~~~~~~~~~~Obstacle layer config~~~~~~~~~~~~~~~~~~~+
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -72,7 +72,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
-        inflation_radius: 0.5
+        inflation_radius: 0.4
       #~~~~~~~~~~~~~~~~~~~Keepout Filter~~~~~~~~~~~~~~~~~~~+
       # keepout_filter:
       #   plugin: "nav2_costmap_2d::KeepoutFilter"
