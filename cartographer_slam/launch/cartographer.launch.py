@@ -30,7 +30,7 @@ def generate_launch_description():
             output='screen',
             name='occupancy_grid_node',
             parameters=[{'use_sim_time': use_sim_time}],
-            arguments=['-resolution', '0.01', '-publish_period_sec', '1.0']
+            arguments=['-resolution', '0.03', '-publish_period_sec', '3.0']
         ),
         Node(
             package='rviz2',
