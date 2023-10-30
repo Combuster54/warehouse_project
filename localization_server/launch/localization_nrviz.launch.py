@@ -60,15 +60,15 @@ def generate_launch_description():
 
                 #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-        ExecuteProcess(
-            cmd=[[
-                FindExecutable(name='ros2'),
-                " service call ",
-                "/reinitialize_global_localization ",
-                "std_srvs/srv/Empty",
-            ]],
-            shell=True
-            )
+        # ExecuteProcess(
+        #     cmd=[[
+        #         FindExecutable(name='ros2'),
+        #         " service call ",
+        #         "/reinitialize_global_localization ",
+        #         "std_srvs/srv/Empty",
+        #     ]],
+        #     shell=True
+        #     )
         
 
         ]) 

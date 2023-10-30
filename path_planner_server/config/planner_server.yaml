@@ -35,7 +35,7 @@ global_costmap:
       transform_tolerance: 0.5
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
 
-      filters: ["keepout_filter"]
+      #filters: ["keepout_filter"]
       #~~~~~~~~~~~~~~~~~~Static layer~~~~~~~~~~~~~~~~~~~+
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"

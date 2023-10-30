@@ -10,10 +10,10 @@ def generate_launch_description():
     package_name = 'localization_server'
     use_sim_time = True
     #~~~~~~~~~~~~~~~~~~Declare path~~~~~~~~~~~~~~~
-    rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
+    #rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')
 
-    sim_map = 'warehouse_sim_res001.yaml'
+    sim_map = 'warehouse_map_sim.yaml'
     #~~~~~~~~~~~~~~~~~~Declare parameters~~~~~~~~~~~~~~~
     # Declara el argumento para el archivo de configuración YAML
     map_file = LaunchConfiguration('map_file')
@@ -53,13 +53,13 @@ def generate_launch_description():
 
         #~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', rviz_file],
-        ),
+        # Node(
+        #     package='rviz2',
+        #     executable='rviz2',
+        #     name='rviz2',
+        #     output='screen',
+        #     arguments=['-d', rviz_file],
+        # ),
         
         #~~~~~~~~~~~~~~~~~~lifeclycler_manager~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
