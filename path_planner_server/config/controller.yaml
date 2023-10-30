@@ -22,7 +22,6 @@ controller_server:
     # nombre del plugin para el controlador
     controller_plugins: ["FollowPath"]
 
-
     # Tópico donde se publicaran las velocidades
     # cmd_vel_topic: "/robot/cmd_vel"
 
@@ -37,7 +36,7 @@ controller_server:
     # Goal checker parameters
     general_goal_checker:
 
-      stateful: false #true
+      stateful: true
 
       plugin: "nav2_controller::SimpleGoalChecker"
       #----------------------DWB Tolerancias----------------------------
@@ -155,15 +154,15 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 5.0 #3.0
-          raytrace_min_range: 0.3 #0.0
-          obstacle_max_range: 5.0 #2.5
-          obstacle_min_range: 0.5 #0.0
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.0
+          obstacle_min_range: 0.0
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0 #3.0
-        inflation_radius: 0.5 #0.35
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.35
       #~~~~~~~~~~~~~~~~~~~Obstacle layer config~~~~~~~~~~~~~~~~~~~+
       # obstacle_layer:
       #   plugin: "nav2_costmap_2d::ObstacleLayer"

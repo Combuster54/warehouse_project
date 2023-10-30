@@ -9,11 +9,11 @@ def generate_launch_description():
     map_package = "map_server"
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
     #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
-    controller_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'controller.yaml')
-    bt_navigator_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'bt.yaml')
-    planner_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'planner_server.yaml')
-    recovery_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'recovery.yaml')
-    filters_yaml = os.path.join(get_package_share_directory('path_planner_server'), 'config', 'filters.yaml')
+    controller_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'controller.yaml')
+    bt_navigator_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'bt.yaml')
+    planner_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'planner_server.yaml')
+    recovery_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'recovery.yaml')
+    filters_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'filters.yaml')
     amcl_file = os.path.join(get_package_share_directory(localization_package),'config','amcl_config.yaml')
     map_file_path = os.path.join(get_package_share_directory(map_package),'config','warehouse_map_sim.yaml')
 
