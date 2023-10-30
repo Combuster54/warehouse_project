@@ -87,7 +87,7 @@ controller_server:
       # Distancia lineal hacia delante para proyectar.
       #linear_granularity: 0.05
 
-      linear_granularity: 0.01 #resolution of map  #0.05
+      linear_granularity: 0.05 #resolution of map  #0.05
 
       # Distancia angular hacia adelante para proyectar
       angular_granularity: 0.005 #resolution of map/2 #0.025
