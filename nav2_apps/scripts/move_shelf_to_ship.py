@@ -18,10 +18,21 @@ from math import cos, sin, pi
 shelf_positions = {
     #"loading_position": [5.845, -0.3,-0.7071067,0.7073883 ],
     #"init_position" : [0.0, 0.0, 0.0, 1.0]
+
+    #Init positiion
+#     - Translation: [0.021, -0.008, 0.000]
+# - Rotation: in Quaternion [0.000, 0.000, -0.010, 1.000]
+
+# loading real position
+# - Translation: [0.239, -2.746, 0.000]
+# - Rotation: in Quaternion [0.000, 0.000, -0.684, 0.730]
+
+#shipping_ position
+
     "init_position" :   [0.031, -0.023, -0.000,
                         -0.000, -0.000, -0.000, 1.000],
-    "loading_position": [5.600, -0.272, 0.000,
-                        -0.000, -0.000, -0.679, 0.734],
+    "loading_position": [0.239, -2.746, 0.000,
+                        -0.000, -0.000, -0.684, 0.730],
 
     "shipping_position":[0.281, -3.0, 0.000,
                         0.000, 0.000, -0.689, 0.725]

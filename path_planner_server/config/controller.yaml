@@ -121,19 +121,18 @@ local_costmap:
       rolling_window: true
       width: 2
       height: 2
-      resolution: 0.01
+      resolution: 0.03
       #robot_radius: 0.25
       footprint: "[ [0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25] ]"
 
       plugins: ["voxel_layer", "inflation_layer"]
-      #filters: ["keepout_filter"]
-
+      filters: ["keepout_filter"]
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
         publish_voxel_map: True
         origin_z: 0.0
-        z_resolution: 0.01
+        z_resolution: 0.03
         z_voxels: 16
         max_obstacle_height: 2.0
         mark_threshold: 0
@@ -181,10 +180,10 @@ local_costmap:
       #     # Alcance mínimo para marcar obstáculos en el mapa de costes
       #     obstacle_min_range: 0.5
 
-      # keepout_filter:
-      #   plugin: "nav2_costmap_2d::KeepoutFilter"
-      #   enabled: True
-      #   filter_info_topic: "/costmap_filter_info"
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "/costmap_filter_info"
 
       static_layer:
         map_subscribe_transient_local: True

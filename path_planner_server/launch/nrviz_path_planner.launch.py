@@ -47,23 +47,23 @@ def generate_launch_description():
             output='screen',
             parameters=[bt_navigator_yaml]),
         #~~~~~~~~~~~~~~~~~~~~~~~map server~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Node(
-        #     package='nav2_map_server',
-        #     executable='map_server',
-        #     name='filter_mask_server',
-        #     output='screen',
-        #     emulate_tty=True,
-        #     parameters=[filters_yaml]
-        #     ),
+        Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='filter_mask_server',
+            output='screen',
+            emulate_tty=True,
+            parameters=[filters_yaml]
+            ),
         #~~~~~~~~~~~~~~~~~~~~~costmap filter~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Node(
-        #     package='nav2_map_server',
-        #     executable='costmap_filter_info_server',
-        #     name='costmap_filter_info_server',
-        #     output='screen',
-        #     emulate_tty=True,
-        #     parameters=[filters_yaml]
-        #     ),
+        Node(
+            package='nav2_map_server',
+            executable='costmap_filter_info_server',
+            name='costmap_filter_info_server',
+            output='screen',
+            emulate_tty=True,
+            parameters=[filters_yaml]
+            ),
         #~~~~~~~~~~~~~~~~~~~~lifecycle manager~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_lifecycle_manager',
@@ -75,8 +75,8 @@ def generate_launch_description():
                                         'controller_server',
                                         'recoveries_server',
                                         'bt_navigator',
-                                        #'filter_mask_server',
-                                        #'costmap_filter_info_server',
+                                        'filter_mask_server',
+                                        'costmap_filter_info_server',
                                         ]}]),
 
         #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~

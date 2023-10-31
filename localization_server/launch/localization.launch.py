@@ -13,7 +13,6 @@ def generate_launch_description():
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','rviz_config.rviz')
     amcl_file = os.path.join(get_package_share_directory(package_name),'config','amcl_config.yaml')
 
-    sim_map = 'warehouse_sim_res001.yaml'
     real_map = 'warehouse_map_real.yaml'
     #~~~~~~~~~~~~~~~~~~Declare parameters~~~~~~~~~~~~~~~
     # Declara el argumento para el archivo de configuración YAML
@@ -74,13 +73,13 @@ def generate_launch_description():
 
         #~~~~~~~~~~~~~~~~~~reiniatilize global~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-        ExecuteProcess(
-            cmd=[[
-                FindExecutable(name='ros2'),
-                " service call ",
-                "/reinitialize_global_localization ",
-                "std_srvs/srv/Empty",
-            ]],
-            shell=True
-            )
-        ]) 
+        # ExecuteProcess(
+        #     cmd=[[
+        #         FindExecutable(name='ros2'),
+        #         " service call ",
+        #         "/reinitialize_global_localization ",
+        #         "std_srvs/srv/Empty",
+        #     ]],
+        #     shell=True
+        #     )
+        # ]) 
