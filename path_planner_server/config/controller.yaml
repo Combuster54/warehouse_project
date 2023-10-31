@@ -136,7 +136,7 @@ local_costmap:
       footprint: "[ [0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25] ]"
 
       plugins: ["voxel_layer", "inflation_layer"]
-      #filters: ["keepout_filter"]
+      filters: ["keepout_filter"]
 
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
