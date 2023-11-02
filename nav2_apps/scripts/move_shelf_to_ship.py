@@ -13,9 +13,11 @@ from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallb
 from geometry_msgs.msg import Polygon,Point32, Twist
 from std_msgs.msg import Empty
 from math import cos, sin, pi
-# Shelf positions for picking
 
-shelf_positions = {
+#Positions to RB-1 Robot based on map 
+#frame_id: map
+
+RB1_positions = {
     #"loading_position": [5.845, -0.3,-0.7071067,0.7073883 ],
     #"init_position" : [0.0, 0.0, 0.0, 1.0]
 
@@ -29,7 +31,7 @@ shelf_positions = {
 
 #shipping_ position
 
-    "init_position" :   [0.031, -0.023, -0.000,
+    "init_position" :   [0.0, -0.00, -0.000,
                         -0.000, -0.000, -0.000, 1.000],
     "loading_position": [0.239, -2.746, 0.000,
                         -0.000, -0.000, -0.684, 0.730],
@@ -44,8 +46,6 @@ shipping_destinations = {
     "shipping_position":[0.281, -3.0, 0.000,
                         0.000, 0.000, -0.689, 0.725]
     }
-
-
 
 rclpy.init()
 
@@ -236,13 +236,13 @@ def set_pos_init():
     initial_pose = PoseStamped()
     initial_pose.header.frame_id = 'map'
     initial_pose.header.stamp = navigator.get_clock().now().to_msg()
-    initial_pose.pose.position.x = shelf_positions[request_init_position][0]
-    initial_pose.pose.position.y = shelf_positions[request_init_position][1]
-    initial_pose.pose.position.z = shelf_positions[request_init_position][2]
-    initial_pose.pose.orientation.x = shelf_positions[request_init_position][3]
-    initial_pose.pose.orientation.y = shelf_positions[request_init_position][4]
-    initial_pose.pose.orientation.z = shelf_positions[request_init_position][5]
-    initial_pose.pose.orientation.w = shelf_positions[request_init_position][6]
+    initial_pose.pose.position.x = RB1_positions[request_init_position][0]
+    initial_pose.pose.position.y = RB1_positions[request_init_position][1]
+    initial_pose.pose.position.z = RB1_positions[request_init_position][2]
+    initial_pose.pose.orientation.x = RB1_positions[request_init_position][3]
+    initial_pose.pose.orientation.y = RB1_positions[request_init_position][4]
+    initial_pose.pose.orientation.z = RB1_positions[request_init_position][5]
+    initial_pose.pose.orientation.w = RB1_positions[request_init_position][6]
 
     navigator.setInitialPose(initial_pose)
 
@@ -318,26 +318,27 @@ def main():
     while(1):
         if state_nav==1:
             print(state_nav)
-            set_pos_init()
-            go_pose(shelf_positions,request_item_location,2)
+            #set_pos_init()
+            go_pose(RB1_positions,request_item_location,2)
             print(state_nav)
-        if state_nav==2:
-            print(state_nav)
-            call_service()
-        if state_nav==3:
-            print(state_nav)
-            publish_footprint_shelf()
-            exit_with_shelf()
-            go_pose(shipping_destinations,request_destination,4)
-        if state_nav==4:
-            print(state_nav)
-            down_shelf()
-            exit_under_the_shelf()
-            publish_footprint_robot()
-            go_pose(shelf_positions,request_init_position,0)
             exit(0)
-        if state_nav==1:
-            exit(0)
+        # if state_nav==2:
+        #     print(state_nav)
+        #     call_service()
+        # if state_nav==3:
+        #     print(state_nav)
+        #     publish_footprint_shelf()
+        #     exit_with_shelf()
+        #     go_pose(shipping_destinations,request_destination,4)
+        # if state_nav==4:
+        #     print(state_nav)
+        #     down_shelf()
+        #     exit_under_the_shelf()
+        #     publish_footprint_robot()
+        #     go_pose(RB1_positions,request_init_position,0)
+        #     exit(0)
+        # if state_nav==1:
+        #     exit(0)
 
 
     exit(0)
