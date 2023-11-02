@@ -8,6 +8,7 @@ def generate_launch_description():
     localization_package = 'localization_server'
     map_package = "map_server"
     rviz_file = os.path.join(get_package_share_directory(package_name),'rviz','pathplanning.rviz')
+    use_sim_time = True
     #~~~~~~~~~~~~~~~~~~~~~~~~path config files~~~~~~~~~~~~~~~~~~~~~~~~~~~+
     controller_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'controller.yaml')
     bt_navigator_yaml = os.path.join(get_package_share_directory(package_name), 'config', 'bt.yaml')
@@ -27,7 +28,7 @@ def generate_launch_description():
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': False}, 
+            parameters=[{'use_sim_time': use_sim_time}, 
                         {'yaml_filename':map_file_path} 
                        ]),
 
@@ -41,7 +42,6 @@ def generate_launch_description():
             parameters=[amcl_file]
 
             ),
-
         #~~~~~~~~~~~~~~~~~~controller server~~~~~~~~~~~~~~~~~~~~~~~~~~
         Node(
             package='nav2_controller',
@@ -107,12 +107,12 @@ def generate_launch_description():
                                         'amcl']}]),
 
         #~~~~~~~~~~~~~~~~~~approaching server~~~~~~~~~~~~~~~~~~~~~~~~~
-        Node(
-            package='attach_shelf',
-            executable='approach_service_server_node',
-            name='attach_shelf',
-            output='screen',
-        ),
+        # Node(
+        #     package='attach_shelf',
+        #     executable='approach_service_server_node',
+        #     name='attach_shelf',
+        #     output='screen',
+        # ),
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~rviz2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      
         Node(
             package='rviz2',
