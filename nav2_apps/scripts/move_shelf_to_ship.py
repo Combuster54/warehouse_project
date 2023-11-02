@@ -15,6 +15,23 @@ from std_msgs.msg import Empty
 from math import cos, sin, pi
 # Shelf positions for picking
 
+
+#Init Position
+
+# - Translation: [-0.067, -0.141, 0.000]
+# - Rotation: in Quaternion [0.000, -0.000, -0.002, 1.000]
+
+
+
+#Loading Position
+# - Translation: [5.557, -0.301, -0.000]
+# - Rotation: in Quaternion [-0.000, -0.000, -0.648, 0.762]
+
+#Shipping Position
+
+# - Translation: [0.661, -3.097, 0.000]
+# - Rotation: in Quaternion [0.000, 0.000, -0.710, 0.705]
+
 shelf_positions = {
     #"loading_position": [5.845, -0.3,-0.7071067,0.7073883 ],
     #"init_position" : [0.0, 0.0, 0.0, 1.0]

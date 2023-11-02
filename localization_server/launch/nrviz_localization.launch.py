@@ -18,7 +18,7 @@ def generate_launch_description():
     map_file = LaunchConfiguration('map_file')
     arg_map_file = DeclareLaunchArgument(
         'map_file',
-        default_value='warehouse_sim_res001.yaml',
+        default_value='warehouse_map_sim.yaml',
         description='Path to the map select'
     )
     # Obtener la ruta completa del archivo YAML del mapa

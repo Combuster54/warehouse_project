@@ -4,7 +4,7 @@ controller_server:
     # especifica la frecuencia con la que el controlador intentará generar 
     # comandos de velocidad para seguir el plan
 
-    controller_frequency: 5.0 #10
+    controller_frequency: 10.0
 
     # El servidor del controlador filtra la parte de velocidad de los mensajes 
     # de odometría recibidos antes de enviarlos al plugin del controlador. 
@@ -31,7 +31,7 @@ controller_server:
       # Cantidad mínima que debe moverse un robot para progresar hacia la meta (m).
       required_movement_radius: 0.05
       # Tiempo máximo de que dispone un robot para desplazarse el radio mínimo (s).
-      movement_time_allowance: 24.0 #10
+      movement_time_allowance: 10.0 #10
 
     # Goal checker parameters
     general_goal_checker:
@@ -54,7 +54,7 @@ controller_server:
       debug_trajectory_details: True
       #~~~~~~~~~~~~~~~~~~~~Parámetros cinemáticos~~~~~~~~~~~~~~~~~~
       #------------Velocidades--------------
-      min_vel_x: -0.1 #0.0
+      min_vel_x: 0.0 #0.0
       max_vel_x: 0.26  #0.26
 
       min_vel_y: 0.0
@@ -68,8 +68,8 @@ controller_server:
 
       min_speed_theta: 0.0
       #------------Aceleraciones--------------
-      acc_lim_x: 0.25 #2.5
-      decel_lim_x: -0.25 #-2.5
+      acc_lim_x: 2.5 #2.5
+      decel_lim_x: -2.5 #-2.5
 
       acc_lim_y: 0.0
       decel_lim_y: 0.0 
@@ -90,7 +90,7 @@ controller_server:
       linear_granularity: 0.05 #resolution of map  #0.05
 
       # Distancia angular hacia adelante para proyectar
-      angular_granularity: 0.005 #resolution of map/2 #0.025
+      angular_granularity: 0.025 #resolution of map/2 #0.025
       #----------------------DWB Controlador----------------------------
       # Tiempo máximo permitido entre transformaciones
       transform_tolerance: 0.2
@@ -116,7 +116,7 @@ controller_server:
       PathDist.scale: 32.0
       GoalDist.scale: 24.0
 
-      RotateToGoal.scale: 20.0 #32
+      RotateToGoal.scale: 32.0
       RotateToGoal.slowing_factor: 5.0
       RotateToGoal.lookahead_time: -1.0
 
