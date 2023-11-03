@@ -18,28 +18,14 @@ from math import cos, sin, pi
 #frame_id: map
 
 RB1_positions = {
-    #"loading_position": [5.845, -0.3,-0.7071067,0.7073883 ],
-    #"init_position" : [0.0, 0.0, 0.0, 1.0]
-
-    #Init positiion
-#     - Translation: [0.021, -0.008, 0.000]
-# - Rotation: in Quaternion [0.000, 0.000, -0.010, 1.000]
-
-# loading real position
-# - Translation: [0.239, -2.746, 0.000]
-# - Rotation: in Quaternion [0.000, 0.000, -0.684, 0.730]
-
-#shipping_ position
-
     "init_position" :   [0.0, -0.00, -0.000,
                         -0.000, -0.000, -0.000, 1.000],
 
-    "loading_position": [0.239, -2.746, 0.000,
-                        -0.000, -0.000, -0.684, 0.730],
+    "loading_position": [4.377, -0.684, 0.000,
+                        -0.000, -0.000, -0.709,  0.705],
 
     "shipping_position":[0.281, -3.0, 0.000,
                         0.000, 0.000, -0.689, 0.725]
-
     }
 
 # Shipping destination for picked products
@@ -312,6 +298,10 @@ def go_pose(go_pose_dic, key_dic, state_num):
     while not navigator.isTaskComplete():
         pass
 
+def self_localize():
+    #rotate 2 sec for autolocalization
+    pass
+
 def main():
     global state_nav
     print(state_nav)
@@ -319,10 +309,10 @@ def main():
     while(1):
         if state_nav==1:
             print(state_nav)
+            #self_localize()
             #set_pos_init()
-            go_pose(RB1_positions,'init_position',0)
-            print(RB1_positions['init_position'])
-            print(state_nav)
+            go_pose(RB1_positions,'loading_position',0)
+            print(RB1_positions['loading_position'])
             exit(0)
         # if state_nav==2:
         #     print(state_nav)
