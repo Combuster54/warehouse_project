@@ -8,7 +8,7 @@ from rclpy.duration import Duration
 import rclpy
 from rclpy.node import Node
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
-from attach_shelf.srv import GoToLoading
+# from attach_shelf.srv import GoToLoading
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 from geometry_msgs.msg import Polygon,Point32, Twist
 from std_msgs.msg import Empty
@@ -33,6 +33,7 @@ RB1_positions = {
 
     "init_position" :   [0.0, -0.00, -0.000,
                         -0.000, -0.000, -0.000, 1.000],
+
     "loading_position": [0.239, -2.746, 0.000,
                         -0.000, -0.000, -0.684, 0.730],
 
@@ -56,9 +57,9 @@ navigator = BasicNavigator()
 
 #create client for service approach
 client_cb_group = MutuallyExclusiveCallbackGroup()
-cli = navigator.create_client(GoToLoading, '/approach_shelf',callback_group=client_cb_group)
-while not cli.wait_for_service(timeout_sec=1.0):
-    navigator.get_logger().info('service not available, waiting again...')
+# cli = navigator.create_client(GoToLoading, '/approach_shelf',callback_group=client_cb_group)
+# while not cli.wait_for_service(timeout_sec=1.0):
+#     navigator.get_logger().info('service not available, waiting again...')
 #create publish
 pub_shelf_down = navigator.create_publisher(Empty,'/elevator_down',10)
 pub_local = navigator.create_publisher(Polygon, '/local_costmap/footprint', 10)
@@ -319,7 +320,8 @@ def main():
         if state_nav==1:
             print(state_nav)
             #set_pos_init()
-            go_pose(RB1_positions,request_item_location,2)
+            go_pose(RB1_positions,'init_position',0)
+            print(RB1_positions['init_position'])
             print(state_nav)
             exit(0)
         # if state_nav==2:
