@@ -285,7 +285,6 @@ def go_pose(go_pose_dic, key_dic, state_num):
         state_nav = state_num
         print('! Bringing product to shipping destination (' + key_dic + ')...')
 
-
     elif result == TaskResult.CANCELED:
         print('Task at ' + key_dic  +
               ' was canceled. Returning to staging point...')
