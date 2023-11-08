@@ -30,7 +30,7 @@ class FollowCartFrame(Node):
     def send_command(self):
         try:
             # Obtener la transformación entre "rick/base_link" y "morty/base_link"
-            transform = self.tf_buffer_.lookup_transform('robot_base_footprint', 'robot_cart_frame', rclpy.time.Time())
+            transform = self.tf_buffer_.lookup_transform('robot_base_footprint', 'robot_cart_laser', rclpy.time.Time())
 
             # Calcular la distancia y el error angular entre los frames de referencia
             error_distance = math.sqrt(pow(transform.transform.translation.x, 2) +

@@ -17,12 +17,11 @@ from std_msgs.msg import Empty
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Polygon,Point32, Twist
-from attach_shelf.srv import GoToLoading
+# from attach_shelf.srv import GoToLoading
 from tf2_ros import TransformListener, Buffer
 from tf2_ros import LookupException, ConnectivityException, ExtrapolationException
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 # ----- #
-
 
 ####################
 request_loading_position = 'loading_position'
@@ -33,7 +32,7 @@ request_init_position = 'init_position'
 class FollowCartFrame(Node):
 
     def __init__(self):
-        super().__init__('FollowFrame Node')
+        super().__init__('FollowFrame_Node')
 
         # Crear el publisher
         qos_profile = QoSProfile(depth=10)
@@ -43,12 +42,15 @@ class FollowCartFrame(Node):
         self.tf_buffer_ = Buffer()
         self.tf_listener_ = TransformListener(self.tf_buffer_, self)
 
-        self.timer_ = self.create_timer(0.2, self.send_command)
         self.timer_on = False
         self.ready_for_footprint = False
         self.cmd_vel = Twist()
 
         return None
+
+    # def create_timer(self):
+
+    #     self.timer_ = self.create_timer(0.2, self.send_command)
 
     def send_command(self):
 
@@ -95,7 +97,7 @@ class FollowCartFrame(Node):
 class MoveShelfNode(Node):
 
     def __init__(self):
-        super().__init__('MoveShelf Node')
+        super().__init__('MoveShelf_Node')
         self.publisher_down_ = self.create_publisher(String, '/elevator_down', 10)
         self.publisher_up_ = self.create_publisher(String, '/elevator_up', 10)
         self.elevator_msg = String()
@@ -117,7 +119,7 @@ class MoveShelfNode(Node):
 class FootPrintPublisher(Node):
 
     def __init__(self):
-        super().__init__('FootPrintPublisher Node')
+        super().__init__('FootPrintPublisher_Node')
 
         self.pub_local = self.create_publisher(Polygon, '/local_costmap/footprint', 10)
         self.pub_global = self.create_publisher(Polygon, '/global_costmap/footprint', 10)
@@ -156,22 +158,26 @@ class FootPrintPublisher(Node):
 class Navigation(Node):
 
     def __init__(self):
-        super().__init__('Navigator Node')
+        super().__init__('Navigator_Node')
 
         self.state_nav = 0
         self.navigator = BasicNavigator()
         self.client_cb_group = MutuallyExclusiveCallbackGroup()
 
+        
+        #Nodes
         self.follow_cart_frame = FollowCartFrame()
         self.move_shelf_node = MoveShelfNode()
         self.footprint_publisher = FootPrintPublisher()
+
         self.counter = 0
         self.RB1_position = {
 
             "init_position" :   [0.031, -0.023, -0.000,
                                 -0.000, -0.000, -0.000, 1.000],
-            "loading_position": [5.600, -0.272, 0.000,
-                                -0.000, -0.000, -0.679, 0.734],
+
+            "loading_position": [4.255, -0.199, 0.000,
+                                -0.000, -0.000,  -0.782, 0.623],
 
             "shipping_position":[0.281, -3.0, 0.000,
                                 0.000, 0.000, -0.689, 0.725]
@@ -208,23 +214,6 @@ class Navigation(Node):
 
         return None
 
-    def call_service(self):
-
-        # once arrived at loading position step to execute the approach service
-        self.navigator.req = GoToLoading.Request()
-        self.navigator.req.attach_to_shelf = True
-        self.navigator.future = self.cli.call_async(self.navigator.req)
-        rclpy.spin_until_future_complete(self.navigator, self.navigator.future)
-        status = self.navigator.future.result()
-        if status != True:
-            #navigator.error('failed service')
-            self.state_nav=3
-        else:
-            self.navigator.info('successful service!')
-            self.state_nav=3
-
-        return None
-
     def go_pose(self, key_dic, state_num):
 
         shelf_item_pose = PoseStamped()
@@ -255,7 +244,6 @@ class Navigation(Node):
 
         result = self.navigator.getResult()
         if result == TaskResult.SUCCEEDED:
-            self.state_nav = self.state_num
             print('! Bringing product to shipping destination (' + key_dic + ')...')
 
         elif result == TaskResult.CANCELED:
@@ -273,49 +261,51 @@ class Navigation(Node):
         return None
 
     def navigation_process(self):
-
+        self.state_nav =1
         #Set Initial Pose && Go to Loading Pose
         if(self.state_nav == 1):
-            self.get_logger().info(f"[1] state_nav = {self.state_nav}")
+            self.get_logger().info(f"[START-1] state_nav = {self.state_nav}")
             self.get_logger().info("[Beginning script, shut down with CTRL-C]")
-            self.get_logger().info(" Setting Initial Pose")
-            self.set_pos_init()
-            self.go_pose(request_loading_position, 2) #which means go to "loading_position"
-            self.get_logger().info(f"[1] state_nav = {self.state_nav}")
+            #self.set_pos_init()
+            #time.sleep(3)
+            self.go_pose(request_init_position, 2) #which means go to "loading_position"
+            self.get_logger().info(f"[FINISHIM-1] state_nav = {self.state_nav}")
 
-        #Follow robot_cart_frame && publish_message_up && publish_footprint_shelf
-        elif(self.state_nav == 2):
-            self.follow_cart_frame.get_logger().info(f"[2] state_nav = {self.state_nav}")
-            self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
-            while(self.follow_cart_frame.ready_for_footprint == False):
-                pass
-            #Start with publisherFootPrint && MoveShelfUp
-            while(self.counter<= 10):
-                self.footprint_publisher.publish_footprint_shelf()
-                self.move_shelf_node.publish_message_up()
-                self.counter += 1
-            #Once It suppossed that everything is okay... I hope so e.e
-            self.state_nav = 3
-            self.follow_cart_frame.get_logger().info(f"[2] state_nav = {self.state_nav}")
+        # #Follow robot_cart_frame && publish_message_up && publish_footprint_shelf
+        # elif(self.state_nav == 2):
+        #     self.follow_cart_frame.get_logger().info(f"[START-2] state_nav = {self.state_nav}")
+        #     self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
+        #     while(self.follow_cart_frame.ready_for_footprint == False):
+        #         pass
+        #     #Start with publisherFootPrint && MoveShelfUp
+        #     while(self.counter<= 10):
+        #         self.footprint_publisher.publish_footprint_shelf()
+        #         #self.move_shelf_node.publish_message_up()
+        #         self.follow_cart_frame.get_logger().info(f"Elevator UP!")
+        #         self.counter += 1
+        #     #Once It suppossed that everything is okay... I hope so e.e
+        #     self.state_nav = 3
+        #     self.follow_cart_frame.get_logger().info(f"[FINISHIM-2] state_nav = {self.state_nav}")
         
-        # Backup && rotate in order to move for the new goal
-        elif(self.state_nav == 3):
-            self.get_logger().info(f"[3] state_nav = {self.state_nav}")
-            self.navigator.backup(backup_dist=0.3, backup_speed=0.09, time_allowance=5)
-            # self.navigator.spin(spin_dist=1.57, time_allowance=10)
-            #Once RB-1 have the object, use Navigation Class for rotating and backup in order to
-            #Align robot for shipping_position
-            self.state_nav = 4
-            self.get_logger().info(f"[3] state_nav = {self.state_nav}")
+        # # Backup && rotate in order to move for the new goal
+        # elif(self.state_nav == 3):
+        #     self.get_logger().info(f"[START-3] state_nav = {self.state_nav}")
+        #     self.navigator.backup(backup_dist=0.3, backup_speed=0.95, time_allowance=0.3)
+        #     # self.navigator.spin(spin_dist=1.57, time_allowance=10)
+        #     #Once RB-1 have the object, use Navigation Class for rotating and backup in order to
+        #     #Align robot for shipping_position
+        #     self.state_nav = 4
+        #     self.get_logger().info(f"[FINISHIM-3] state_nav = {self.state_nav}")
+        #     self.get_logger().info(f"END")
+        #     exit(0)
+        # #Send shipping position && down object && send initial position
+        # elif(self.state_nav == 4):
 
-        #Send shipping position && down object && send initial position
-        elif(self.state_nav == 4):
-
-            self.get_logger().info(f"[4] state_nav = {self.state_nav}") 
+        #     self.get_logger().info(f"[START-4] state_nav = {self.state_nav}") 
 
         else:
 
-            self.follow_cart_frame.get_logger().info(f"[ERORR: Something happens]")
+            self.navigator.get_logger().info(f"[ERORR: Something happens]")
 
             pass
 
@@ -324,27 +314,31 @@ class Navigation(Node):
 def main():
 
     rclpy.init()
-    # cart_frame_node_ = FollowCartFrame()
-    # up_down_node_ = MoveShelfNode()
-    # footprint_pub_node_ = FootPrintPublisher()
+
     navigation_node_ = Navigation()
 
+    cart_frame_node_ = navigation_node_.follow_cart_frame
+    move_shelf_node_ = navigation_node_.move_shelf_node
+    footprint_pub_node_ = navigation_node_.footprint_publisher
+
     executor = MultiThreadedExecutor()
-    # executor.add_node(cart_frame_node_)
-    # executor.add_node(up_down_node_)
-    # executor.add_node(footprint_pub_node_)
+
+    executor.add_node(cart_frame_node_)
+    executor.add_node(move_shelf_node_)
+    executor.add_node(footprint_pub_node_)
     executor.add_node(navigation_node_)
 
     try:
+        print("hello")
         executor.spin()#Where I put the spin? o I just use while instead?
     except KeyboardInterrupt:
         #Is it possible to have a general get_logger? how?
         navigation_node_.get_logger().info('Keyboard interrupt, shutting down.\n')
 
     #There are a lot of nodes!
-    # cart_frame_node_.destroy_node()
-    # up_down_node_.destroy_node()
-    # footprint_pub_node_.destroy_node()
+    cart_frame_node_.destroy_node()
+    move_shelf_node_.destroy_node()
+    footprint_pub_node_.destroy_node()
     navigation_node_.destroy_node()
     rclpy.shutdown()
 
