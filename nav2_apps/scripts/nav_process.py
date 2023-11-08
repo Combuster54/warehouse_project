@@ -16,7 +16,7 @@ from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallb
 from std_msgs.msg import Empty
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
-from geometry_msgs.msg import Polygon,Point32, Twist
+from geometry_msgs.msg import Polygon, Point32, Twist
 # from attach_shelf.srv import GoToLoading
 from tf2_ros import TransformListener, Buffer
 from tf2_ros import LookupException, ConnectivityException, ExtrapolationException
@@ -42,23 +42,29 @@ class FollowCartFrame(Node):
         self.tf_buffer_ = Buffer()
         self.tf_listener_ = TransformListener(self.tf_buffer_, self)
 
-        self.timer_on = False
         self.ready_for_footprint = False
         self.cmd_vel = Twist()
 
+        #timer 
+        #self.timer_ = None
+
+        self.timer_on = False
+
         return None
 
-    # def create_timer(self):
-
-    #     self.timer_ = self.create_timer(0.2, self.send_command)
+    def call_timer(self):
+        #print("Starting_timer!!!")
+        self.timer_ = self.create_timer(0.2, self.send_command)
 
     def send_command(self):
 
+        #print("send_command")
         if(self.timer_on):
 
             try:
+                #print("timer is on!!!")
                 # Obtener la transformación entre "rick/base_link" y "morty/base_link"
-                transform = self.tf_buffer_.lookup_transform('robot_base_footprint', 'robot_cart_frame', rclpy.time.Time())
+                transform = self.tf_buffer_.lookup_transform('robot_base_footprint', 'robot_cart_laser', rclpy.time.Time())
 
                 # Calcular la distancia y el error angular entre los frames de referencia
                 error_distance = math.sqrt(pow(transform.transform.translation.x, 2) +
@@ -91,6 +97,7 @@ class FollowCartFrame(Node):
 
             except (LookupException, ConnectivityException, ExtrapolationException) as e:
                 self.get_logger().warn('TF2 error: {}'.format(str(e)))
+                self.timer_.cancel()
 
         return None
 
@@ -131,12 +138,18 @@ class FootPrintPublisher(Node):
         self.elevator_msg.data = ""   # this will always be blank string!
         return None
 
+        
+        
     def publish_footprint_shelf(self):
 
-        points = [Point32(0.5, 0.4, 0.0), Point32(0.5, -0.4, 0.0),
-                Point32(-0.5, -0.4, 0.0), Point32(-0.5, 0.4, 0.0)]
 
-        footprint = Polygon(points=points)   
+        points = [Point32(0.5, 0.4, 0.0), Point32(0.5, -0.4, 0.0),
+                  Point32(-0.5, -0.4, 0.0), Point32(-0.5, 0.4, 0.0)]
+
+        footprint = Polygon()
+
+        for point in points:
+            footprint.points.append(point)
 
         self.pub_local.publish(footprint)
         self.pub_global.publish(footprint)
@@ -146,9 +159,12 @@ class FootPrintPublisher(Node):
     def publish_init_footprint(self):
 
         points = [Point32(0.25, 0.25, 0.0), Point32(0.25, -0.25, 0.0),
-                Point32(-0.25, -0.25, 0.0), Point32(-0.25, 0.25, 0.0)]
+                  Point32(-0.25, -0.25, 0.0), Point32(-0.25, 0.25, 0.0)]
 
-        footprint = Polygon(points=points)
+        footprint = Polygon()
+
+        for point in points:
+            footprint.points.append(point)
 
         self.pub_local.publish(footprint)
         self.pub_global.publish(footprint)
@@ -164,7 +180,6 @@ class Navigation(Node):
         self.navigator = BasicNavigator()
         self.client_cb_group = MutuallyExclusiveCallbackGroup()
 
-        
         #Nodes
         self.follow_cart_frame = FollowCartFrame()
         self.move_shelf_node = MoveShelfNode()
@@ -266,26 +281,36 @@ class Navigation(Node):
         if(self.state_nav == 1):
             self.get_logger().info(f"[START-1] state_nav = {self.state_nav}")
             self.get_logger().info("[Beginning script, shut down with CTRL-C]")
-            #self.set_pos_init()
-            #time.sleep(3)
-            self.go_pose(request_init_position, 2) #which means go to "loading_position"
+            self.set_pos_init()
+            time.sleep(4)
+            self.go_pose(request_loading_position, 2) #which means go to "loading_position"
             self.get_logger().info(f"[FINISHIM-1] state_nav = {self.state_nav}")
+            self.state_nav = 2
+        #Follow robot_cart_frame && publish_message_up && publish_footprint_shelf
+        if(self.state_nav == 2):
 
-        # #Follow robot_cart_frame && publish_message_up && publish_footprint_shelf
-        # elif(self.state_nav == 2):
-        #     self.follow_cart_frame.get_logger().info(f"[START-2] state_nav = {self.state_nav}")
-        #     self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
-        #     while(self.follow_cart_frame.ready_for_footprint == False):
-        #         pass
-        #     #Start with publisherFootPrint && MoveShelfUp
-        #     while(self.counter<= 10):
-        #         self.footprint_publisher.publish_footprint_shelf()
-        #         #self.move_shelf_node.publish_message_up()
-        #         self.follow_cart_frame.get_logger().info(f"Elevator UP!")
-        #         self.counter += 1
-        #     #Once It suppossed that everything is okay... I hope so e.e
-        #     self.state_nav = 3
-        #     self.follow_cart_frame.get_logger().info(f"[FINISHIM-2] state_nav = {self.state_nav}")
+            self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
+            self.get_logger().info(f"call timer")
+            self.follow_cart_frame.call_timer()
+
+            self.follow_cart_frame.get_logger().info(f"[START-2] state_nav = {self.state_nav}")
+
+        
+            
+            # while(self.follow_cart_frame.ready_for_footprint == False):
+            #     pass
+
+            # time.sleep(10)
+
+            #Start with publisherFootPrint && MoveShelfUp
+            # self.footprint_publisher.publish_footprint_shelf()
+            #self.move_shelf_node.publish_message_up()
+            # self.follow_cart_frame.get_logger().info(f"Elevator UP!")
+
+            self.counter += 1
+            #Once It suppossed that everything is okay... I hope so e.e
+            self.state_nav = 3
+            self.follow_cart_frame.get_logger().info(f"[FINISHIM-2] state_nav = {self.state_nav}")
         
         # # Backup && rotate in order to move for the new goal
         # elif(self.state_nav == 3):
@@ -331,8 +356,9 @@ def main():
     try:
         print("hello")
         executor.spin()#Where I put the spin? o I just use while instead?
-    except KeyboardInterrupt:
+    except KeyboardInterrupt :
         #Is it possible to have a general get_logger? how?
+        print("[ERROR]")
         navigation_node_.get_logger().info('Keyboard interrupt, shutting down.\n')
 
     #There are a lot of nodes!
