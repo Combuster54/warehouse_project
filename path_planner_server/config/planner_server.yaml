@@ -14,7 +14,7 @@ planner_server:
       tolerance: 0.25
       #tolerance: 0.30
       # usar el algoritmo A*
-      use_astar: false
+      use_astar: true
       # Permitir que la ruta se genera en espacios no explorados del map
       allow_unknown: true
 

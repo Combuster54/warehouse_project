@@ -98,6 +98,8 @@ class FollowCartFrame(Node):
             except (LookupException, ConnectivityException, ExtrapolationException) as e:
                 self.get_logger().warn('TF2 error: {}'.format(str(e)))
                 self.get_logger().warn("[FollowCartFrame send_command EXCEPT]")
+#                self.ready_for_footprint = True
+
                 self.timer_.cancel()
 
                 self.ready_for_footprint = True
@@ -215,8 +217,10 @@ class Navigation(Node):
         self.publisher_ = self.create_publisher(Twist, 'robot/cmd_vel', 10)
         self.duration_backward = Duration(seconds=16)
         self.duration_forward = Duration(seconds=10)
-
+        self.duration_spin = Duration(seconds=10) 
         self.counter = 0
+        self.timer_called = False
+
         self.RB1_position = {
 
             "init_position" :   [0.031, -0.023, -0.000,
@@ -235,6 +239,23 @@ class Navigation(Node):
 
         return None
 
+    def publish_velocity_spin(self):
+        start_time = self.get_clock().now()
+        while rclpy.ok() and (self.get_clock().now() - start_time) < self.duration_spin:
+            msg = Twist()
+            msg.linear.x = 0.00
+            msg.linear.y = 0.0
+            msg.linear.z = 0.0
+            msg.angular.x = 0.0
+            msg.angular.y = 0.0
+            msg.angular.z = -0.27
+            self.publisher_.publish(msg)
+            self.get_logger().info(f"[Publish Velocity] Backward") 
+            self.rate1.sleep
+            
+        msg.linear.x = 0.0
+        self.publisher_.publish(msg)
+        
     def publish_velocity_backward(self):
         start_time = self.get_clock().now()
         while rclpy.ok() and (self.get_clock().now() - start_time) < self.duration_backward:
@@ -340,7 +361,7 @@ class Navigation(Node):
         print("[Nav process]")
         #Set Initial Pose && Go to Loading Pose
         if(self.state_nav == 1):
-            self.state_nav = 0 #To not repeat them
+            self.state_nav = 2
             self.get_logger().info(f"[START-1] state_nav = {self.state_nav}")
             self.get_logger().info("[Beginning script, shut down with CTRL-C]")
             self.set_pos_init()
@@ -350,52 +371,52 @@ class Navigation(Node):
             self.state_nav = 2
         #Follow robot_cart_frame && publish_message_up && publish_footprint_shelf
         if(self.state_nav == 2):
-            self.state_nav = 0 #To not repeat them
-            self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
-            self.get_logger().info(f"call timer")
-            self.follow_cart_frame.call_timer()
+            #self.state_nav = 0 #To not repeat them
             self.state_nav == -1
+            self.get_logger().info(f"call timer")
+            if (not self.timer_called):
+                self.follow_cart_frame.timer_on = True #Start following cart_frame [real robot]
+                self.follow_cart_frame.call_timer()
+                self.timer_called = True
+            #self.state_nav == -1
             self.follow_cart_frame.get_logger().info(f"[START-2] state_nav = {self.state_nav}")
 
         if(self.state_nav == -1): 
-
             self.follow_cart_frame.get_logger().info(f"Following robot_cart_laser frame...")
 
-
-        if(self.follow_cart_frame.ready_for_footprint ):
+        if(self.follow_cart_frame.ready_for_footprint):
+            self.state_nav = 3
             self.follow_cart_frame.get_logger().info(f"[FINISHIM-2] state_nav = {self.state_nav}")
             self.publish_velocity_forward()
             self.get_logger().info(f"[FootPrint READY] PublishFootprint && Elevator UP!")
             self.move_shelf_node.publish_message_up()
             self.footprint_publisher.publish_footprint_shelf()
-            self.state_nav = 3
 
         # Backup && rotate in order to move for the new goal
         if(self.state_nav == 3):
-            self.state_nav = 0
+            self.state_nav = 4
+            self.follow_cart_frame.ready_for_footprint = False
             self.publish_velocity_backward()
-            self.navigator.spin(spin_dist=1.57, time_allowance=5)
+            self.publish_velocity_spin()
             self.get_logger().info(f"[START-3] state_nav = {self.state_nav}")
-            self.state_nav =0
-            #Once RB-1 have the object, use Navigation Class for rotating and backup in order to
-            #Align robot for shipping_position
+            self.publish_velocity_forward()
+
         #Send shipping position && down object && send initial position
         if(self.state_nav == 4):
-            self.state_nav = 0
             self.get_logger().info(f"[FINISHIM-3] state_nav = {self.state_nav}")
-
             self.get_logger().info(f"[START-4] state_nav = {self.state_nav}")
             self.go_pose(request_shipping_position)
             self.get_logger().info(f"[RESTARTFOOTPRINT] PublishFootprint && Elevator Down!")
             self.footprint_publisher.publish_init_footprint()
+            self.move_shelf_node.publish_message_down()
+            self.publish_velocity_backward()
             self.go_pose(request_init_position)
-            self.get_logger().info(f"[START-4] state_nav = {self.state_nav}") 
-            self.get_logger().info(f"CheckPoint6 Done!") 
-
-        else:
-
-            self.navigator.get_logger().info(f"[ERORR: Something happens]")
-            pass
+            self.state_nav = 5
+            self.get_logger().info(f"[FINISH-4] state_nav = {self.state_nav}") 
+        if(self.state_nav == 5):
+            self.go_pose(request_init_position)
+            self.get_logger().info(f"CheckPoint6 Done!")
+            self.nav_timer.cancel()
 
         return None
 
